@@ -70,7 +70,7 @@ export default function LoginPage() {
             <input
               type="email"
               {...formik.getFieldProps("email")}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="your@email.com"
             />
             {formik.touched.email && formik.errors.email && (
@@ -85,7 +85,7 @@ export default function LoginPage() {
             <input
               type="password"
               {...formik.getFieldProps("password")}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="••••••••"
             />
             {formik.touched.password && formik.errors.password && (
