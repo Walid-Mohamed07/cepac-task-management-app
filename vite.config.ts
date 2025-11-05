@@ -19,5 +19,8 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, "/api"),
       },
     },
+    allowedHosts: [
+      "03352127-a3bb-4d68-81c9-47533c446ab2-00-2ti1i4xcu6no9.kirk.replit.dev",
+    ],
   },
 });

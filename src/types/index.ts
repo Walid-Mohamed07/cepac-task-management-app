@@ -128,3 +128,7 @@ export interface UpdateSubTaskPayload {
   status?: "pending" | "in-progress" | "completed" | "stopped";
   deadTime?: string;
 }
+
+export interface SubTaskStatus {
+  status: "pending" | "in-progress" | "completed" | "stopped";
+}

@@ -28,7 +28,15 @@ export default function AssignTaskForm({
       return;
     }
     try {
-      await createSubTask({ taskId, userId }).unwrap();
+      await createSubTask({
+        taskId,
+        userId,
+        title: "",
+        description: "",
+        status: "pending",
+        deadTime: "",
+        priority: "low",
+      }).unwrap();
       onClose();
     } catch (err) {
       console.error("Failed to assign task:", err);
