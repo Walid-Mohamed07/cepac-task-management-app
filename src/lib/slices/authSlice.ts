@@ -2,9 +2,9 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
   _id: string;
-  name: string;
+  name?: string;
   email: string;
-  role: {
+  role?: {
     name: "admin" | "employee";
   };
   profilePicture?: string;

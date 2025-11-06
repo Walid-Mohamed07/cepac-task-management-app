@@ -49,7 +49,7 @@ function AppContent() {
         element={
           user && isAuthenticated ? (
             <Navigate
-              to={user.role.name === "admin" ? "/admin" : "/employee"}
+              to={user.role?.name === "admin" ? "/admin" : "/employee"}
             />
           ) : (
             <LoginPage />
@@ -85,7 +85,7 @@ function AppContent() {
         element={
           user && isAuthenticated ? (
             <Navigate
-              to={user.role.name === "admin" ? "/admin" : "/employee"}
+              to={user.role?.name === "admin" ? "/admin" : "/employee"}
             />
           ) : (
             <Navigate to="/login" />

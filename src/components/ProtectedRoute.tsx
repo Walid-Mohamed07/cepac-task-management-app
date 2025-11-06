@@ -19,10 +19,10 @@ export default function ProtectedRoute({
   }
 
   // Wrong role
-  if (user.role.name !== requiredRole) {
+  if (user.role?.name !== requiredRole) {
     return (
       <Navigate
-        to={user.role.name === "admin" ? "/admin" : "/employee"}
+        to={user.role?.name === "admin" ? "/admin" : "/employee"}
         replace
       />
     );

@@ -4,6 +4,7 @@ import { logout } from "../../lib/slices/authSlice";
 import { useGetAssignedTasksQuery } from "../../lib/services/apiSlice";
 import NotificationBell from "../../components/NotificationBell";
 import TaskCard from "../../components/TaskCard";
+import type { Task } from "../../types";
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ export default function EmployeeDashboard() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tasks.map((task: any) => (
+            {tasks.map((task: Task) => (
               <TaskCard key={task._id} task={task} />
             ))}
           </div>

@@ -12,6 +12,7 @@ export default function NotificationBell() {
   const { data: notifications = [] } = useGetNotificationsQuery({});
 
   const unreadCount = notifications.filter(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (n: any) => n.status === "unread"
   ).length;
 

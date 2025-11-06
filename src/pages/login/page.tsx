@@ -34,12 +34,16 @@ export default function LoginPage() {
         const decoded = jwtDecode(response.token);
 
         console.log(decoded); // shows payload { id, email, role, ... }
+        window.alert(
+          `Login Successful!\nDecoded payload: ${JSON.stringify(decoded)}`
+        );
 
         // Save to Redux
         dispatch(
           setCredentials({ user: response.user, token: response.token })
         );
         navigate(response.user.role.name == "admin" ? "/admin" : "/employee");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err?.data?.message || "Login failed. Please try again.");
       }

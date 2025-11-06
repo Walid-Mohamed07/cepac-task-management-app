@@ -35,6 +35,7 @@ export default function AdminDashboard() {
   ] = useUpdateSubTaskMutation();
   const [
     deleteSubTask,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     { isLoading: isDeletingSubTask, error: deleteSubTaskError },
   ] = useDeleteSubTaskMutation();
 
@@ -97,7 +98,7 @@ export default function AdminDashboard() {
       try {
         await deleteTask(taskId).unwrap();
       } catch (err) {
-        console.error("Failed to delete the task: ", err);
+        console.error("Failed to delete the task: ", err, deleteSubTaskError);
       }
     }
   };

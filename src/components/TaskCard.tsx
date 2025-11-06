@@ -7,19 +7,19 @@ import { formatDate } from "../utils/formatDate";
 
 interface TaskCardProps {
   task: Task;
-  expandedTasks: Record<string, boolean>;
-  onToggleExpand: (taskId: string) => void;
+  expandedTasks?: Record<string, boolean>;
+  onToggleExpand?: (taskId: string) => void;
   subTasks?: SubTask[];
-  onSave: (updatedTask: Task) => void;
-  isUpdating: boolean;
+  onSave?: (updatedTask: Task) => void;
+  isUpdating?: boolean;
   isCreating?: boolean;
   isDeleting?: boolean;
   onDelete?: () => void;
   onCancelCreate?: () => void;
-  onUpdateSubTask: (subTask: SubTask) => void;
-  isUpdatingSubTask: boolean;
-  onDeleteSubTask: (subTaskId: string) => void;
-  isDeletingSubTask: boolean;
+  onUpdateSubTask?: (subTask: SubTask) => void;
+  isUpdatingSubTask?: boolean;
+  onDeleteSubTask?: (subTaskId: string) => void;
+  isDeletingSubTask?: boolean;
 }
 
 export default function TaskCard({
@@ -34,9 +34,7 @@ export default function TaskCard({
   onCancelCreate,
   onDelete,
   onUpdateSubTask,
-  isUpdatingSubTask,
   onDeleteSubTask,
-  isDeletingSubTask,
 }: TaskCardProps) {
   const [isEditing, setIsEditing] = useState(isCreating);
   const [editableTask, setEditableTask] = useState<Task>(task);
@@ -54,10 +52,12 @@ export default function TaskCard({
     completed: "bg-green-400 bg-opacity-20 text-white border-accent",
   };
 
-  const isExpanded = !isCreating && expandedTasks[task._id];
+  const isExpanded = !isCreating && expandedTasks![task._id];
 
   const handleSave = () => {
-    onSave(editableTask);
+    if (onSave) {
+      onSave(editableTask);
+    }
     if (!isCreating) {
       setIsEditing(false);
     }
@@ -117,7 +117,7 @@ export default function TaskCard({
         </div>
         {!isCreating && (
           <button
-            onClick={() => onToggleExpand(task._id)}
+            onClick={() => onToggleExpand!(task._id)}
             className="bg-black text-white rounded-xs hover:text-gray-400 transition ml-2 p-2 px-4"
             aria-label="Toggle subtasks"
           >
@@ -214,14 +214,14 @@ export default function TaskCard({
         <div className="flex items-center text-xs text-gray-500 mb-3">
           Created by:{" "}
           <span className="font-medium text-gray-700 ml-1">
-            {task.createdBy.name}
+            {task.createdBy!.name}
           </span>
           <img
             className="ml-2 size-7 rounded-4xl"
             src={
-              task.createdBy.profilePicture!.length > 0
+              task.createdBy!.profilePicture!.length > 0
                 ? `${import.meta.env.VITE_STORAGE_PATH}${
-                    task.createdBy.profilePicture
+                    task.createdBy!.profilePicture
                   }`
                 : `${import.meta.env.VITE_STORAGE_PATH}/unknown.webp`
             }
@@ -288,8 +288,8 @@ export default function TaskCard({
           {subTasks && subTasks.length > 0 && (
             <SubTaskList
               subtasks={subTasks}
-              onUpdate={onUpdateSubTask}
-              onDelete={onDeleteSubTask}
+              onUpdate={onUpdateSubTask!}
+              onDelete={onDeleteSubTask!}
             />
           )}
           {subTasks && subTasks.length === 0 && (

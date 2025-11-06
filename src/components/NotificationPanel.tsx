@@ -87,6 +87,7 @@ export default function NotificationPanel() {
         {items.length === 0 ? (
           <div className="p-4 text-center text-gray-500">No notifications</div>
         ) : (
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           items.map((notification: any) => (
             <div
               key={notification._id}

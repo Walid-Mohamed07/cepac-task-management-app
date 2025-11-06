@@ -32,7 +32,7 @@ export default function SubTaskList({
     setEditingSubTaskId(subtask._id);
     setEditableStatus(subtask.status);
     setEditableDeadTime(subtask.deadTime ? subtask.deadTime.slice(0, 16) : "");
-    setEditableTitle(subtask.title);
+    setEditableTitle(subtask.title!);
     setEditableDescription(subtask.description);
   };
 

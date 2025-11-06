@@ -25,9 +25,9 @@ export interface Task {
   priority: "high" | "medium" | "low";
   status: "pending" | "in-progress" | "completed";
   assignedTo?: AssignedTo[];
-  createdBy: User;
+  createdBy?: User;
   cumulativeTime: number;
-  deadTime: string;
+  deadTime?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,7 +35,7 @@ export interface Task {
 export interface SubTask {
   _id: string;
   title: string;
-  description?: string;
+  description: string;
   userId: {
     _id?: string;
     name: string;
@@ -129,6 +129,4 @@ export interface UpdateSubTaskPayload {
   deadTime?: string;
 }
 
-export interface SubTaskStatus {
-  status: "pending" | "in-progress" | "completed" | "stopped";
-}
+export type SubTaskStatus = "pending" | "in-progress" | "completed" | "stopped";

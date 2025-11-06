@@ -16,7 +16,7 @@ import type {
 } from "../../types";
 import { handleError } from "../../utils/errorHandling";
 
-const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+const baseUrl = import.meta.env.VITE_API_URL!;
 
 const baseQuery = fetchBaseQuery({
   baseUrl,
@@ -51,7 +51,18 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     // Auth endpoints
     login: builder.mutation<
-      { token: string; user: any },
+      {
+        token: string;
+        user: {
+          _id: string;
+          ame: string;
+          email: string;
+          profilePicture: string;
+          role: {
+            name: "admin" | "employee";
+          };
+        };
+      },
       { email: string; password: string }
     >({
       query: (credentials) => ({
@@ -105,7 +116,7 @@ export const apiSlice = createApi({
       transformErrorResponse: (response) =>
         handleError(response, "Failed to update blog"),
       invalidatesTags: (result, error, arg) =>
-        error ? [] : [{ type: "Task", id: arg.id }],
+        error ? [] : [{ type: "Task", id: arg.id, res: result }],
     }),
 
     deleteTask: builder.mutation<void, string>({
@@ -170,7 +181,7 @@ export const apiSlice = createApi({
     // Notification endpoints
     getNotifications: builder.query({
       query: () => "/notifications",
-      pollingInterval: 30000, // Poll every 30 seconds
+      // pollingInterval: 30000, // Poll every 30 seconds
     }),
 
     markNotificationAsRead: builder.mutation({
