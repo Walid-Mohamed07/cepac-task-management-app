@@ -31,12 +31,12 @@ export default function LoginPage() {
       try {
         const response = await login(values).unwrap();
         // Decode the token payload
-        const decoded = jwtDecode(response.token);
+        // const decoded = jwtDecode(response.token);
 
-        console.log(decoded); // shows payload { id, email, role, ... }
-        window.alert(
-          `Login Successful!\nDecoded payload: ${JSON.stringify(decoded)}`
-        );
+        // console.log(decoded); // shows payload { id, email, role, ... }
+        // window.alert(
+        //   `Login Successful!\nDecoded payload: ${JSON.stringify(decoded)}`
+        // );
 
         // Save to Redux
         dispatch(
