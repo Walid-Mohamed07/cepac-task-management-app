@@ -82,7 +82,7 @@ export default function TaskCard({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border-l-4 border-blue-500">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-5 border-l-4 border-blue-500 max-h-fit">
       <div
         className={`flex items-start justify-between mb-3 ${
           isCreating ? "flex-col" : ""
@@ -140,7 +140,7 @@ export default function TaskCard({
         )}
       </div>
 
-      <div className="flex flex-col gap-2 mb-4">
+      <div className="flex flex-col gap-2 mb-2">
         <div className="flex items-center gap-2 mr-4">
           <span className="text-xs text-gray-500 w-16">Priority: </span>
           {isEditing ? (
@@ -211,22 +211,24 @@ export default function TaskCard({
       </div>
 
       {!isCreating && (
-        <div className="flex items-center text-xs text-gray-500 mb-3">
-          Created by:{" "}
-          <span className="font-medium text-gray-700 ml-1">
-            {task.createdBy!.name}
-          </span>
-          <img
-            className="ml-2 size-7 rounded-4xl"
-            src={
-              task.createdBy!.profilePicture!.length > 0
-                ? `${import.meta.env.VITE_STORAGE_PATH}${
-                    task.createdBy!.profilePicture
-                  }`
-                : `${import.meta.env.VITE_STORAGE_PATH}/unknown.webp`
-            }
-            alt="UserImg"
-          />
+        <div className="flex items-center text-xs text-gray-500 mb-3 gap-2">
+          <span className="text-xs text-gray-500 w-16">Created by: </span>
+          <div className="flex items-center px-2">
+            <span className="font-medium text-gray-700">
+              {task.createdBy!.name}
+            </span>
+            <img
+              className="ml-2 size-7 rounded-4xl"
+              src={
+                task.createdBy!.profilePicture!.length > 0
+                  ? `${import.meta.env.VITE_STORAGE_PATH}${
+                      task.createdBy!.profilePicture
+                    }`
+                  : `${import.meta.env.VITE_STORAGE_PATH}/unknown.webp`
+              }
+              alt="UserImg"
+            />
+          </div>
         </div>
       )}
 
@@ -256,13 +258,13 @@ export default function TaskCard({
             >
               Edit
             </button>
-            <button
+            {/* <button
               onClick={onDelete}
               disabled={isDeleting}
               className="py-0.5 px-4 rounded-xs bg-red-600 hover:bg-red-500 text-white font-medium cursor-pointer transition-all duration-200 disabled:bg-gray-300"
             >
               Delete
-            </button>
+            </button> */}
           </>
         )}
       </div>
@@ -271,7 +273,7 @@ export default function TaskCard({
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="flex justify-end mb-2">
             <Button
-              classN="text-black"
+              classN="text-black cursor-pointer hover:text-gray-600"
               onClick={() => setIsAssigning(!isAssigning)}
             >
               + Assign Task
@@ -289,7 +291,7 @@ export default function TaskCard({
             <SubTaskList
               subtasks={subTasks}
               onUpdate={onUpdateSubTask!}
-              onDelete={onDeleteSubTask!}
+              // onDelete={onDeleteSubTask!}
             />
           )}
           {subTasks && subTasks.length === 0 && (

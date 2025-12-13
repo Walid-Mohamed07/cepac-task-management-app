@@ -23,9 +23,10 @@ export interface Task {
   title: string;
   description: string;
   priority: "high" | "medium" | "low";
-  status: "pending" | "in-progress" | "completed";
+  status: "pending" | "in-progress" | "completed" | "stopped";
   assignedTo?: AssignedTo[];
   createdBy?: User;
+  assignedBy?: User;
   cumulativeTime: number;
   deadTime?: string;
   createdAt: string;
@@ -48,6 +49,7 @@ export interface SubTask {
   taskId: {
     _id?: string;
     title: string;
+    priority?: "high" | "medium" | "low";
     description?: string;
   };
   status: "pending" | "in-progress" | "completed" | "stopped";
@@ -66,10 +68,19 @@ export interface Notification {
   userId: string;
   title: string;
   message: string;
+  messageType?: "info" | "warning" | "error" | "success";
   type: "error" | "success" | "warning" | "task" | "info";
-  status: "read" | "unread";
+  read: boolean;
+  meta?: Record<string, any>;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CreateNotificationPayload {
+  userId: string;
+  title: string;
+  message: string;
+  meta?: Record<string, any>;
 }
 
 export interface AuthResponse {

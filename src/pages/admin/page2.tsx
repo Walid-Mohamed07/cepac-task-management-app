@@ -3,9 +3,9 @@ import {
   useGetAllSubTasksQuery,
   useUpdateTaskMutation,
   useCreateTaskMutation,
-  useDeleteTaskMutation,
+  // useDeleteTaskMutation,
   useUpdateSubTaskMutation,
-  useDeleteSubTaskMutation,
+  // useDeleteSubTaskMutation,
 } from "../../lib/services/apiSlice";
 // import NotificationBell from "../../components/NotificationBell";
 import TaskCard from "../../components/TaskCard";
@@ -27,17 +27,17 @@ export default function AdminDashboard() {
     useUpdateTaskMutation();
   const [createTask, { isLoading: isCreating, error: createTaskError }] =
     useCreateTaskMutation();
-  const [deleteTask, { isLoading: isDeleting, error: deleteTaskError }] =
-    useDeleteTaskMutation();
+  // const [deleteTask, { isLoading: isDeleting, error: deleteTaskError }] =
+  //   useDeleteTaskMutation();
   const [
     updateSubTask,
     { isLoading: isUpdatingSubTask, error: updateSubTaskError },
   ] = useUpdateSubTaskMutation();
-  const [
-    deleteSubTask,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    { isLoading: isDeletingSubTask, error: deleteSubTaskError },
-  ] = useDeleteSubTaskMutation();
+  // const [
+  //   deleteSubTask,
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   { isLoading: isDeletingSubTask, error: deleteSubTaskError },
+  // ] = useDeleteSubTaskMutation();
 
   const errorMsg =
     (updateTaskError &&
@@ -48,10 +48,11 @@ export default function AdminDashboard() {
       : undefined) ||
     (updateSubTaskError && "data" in updateSubTaskError
       ? (updateSubTaskError.data as { message: string }).message
-      : undefined) ||
-    (deleteTaskError &&
-      "data" in deleteTaskError &&
-      (deleteTaskError.data as { message: string }).message);
+      : undefined);
+  //   ||
+  // (deleteTaskError &&
+  //   "data" in deleteTaskError &&
+  //   (deleteTaskError.data as { message: string }).message);
 
   const toggleTaskExpanded = (taskId: string) => {
     setExpandedTasks((prev) => ({
@@ -93,15 +94,15 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleDeleteTask = async (taskId: string) => {
-    if (window.confirm("Are you sure you want to delete this task?")) {
-      try {
-        await deleteTask(taskId).unwrap();
-      } catch (err) {
-        console.error("Failed to delete the task: ", err, deleteSubTaskError);
-      }
-    }
-  };
+  // const handleDeleteTask = async (taskId: string) => {
+  //   if (window.confirm("Are you sure you want to delete this task?")) {
+  //     try {
+  //       await deleteTask(taskId).unwrap();
+  //     } catch (err) {
+  //       console.error("Failed to delete the task: ", err, deleteSubTaskError);
+  //     }
+  //   }
+  // };
 
   const handleUpdateSubTask = async (subTask: SubTask) => {
     try {
@@ -117,15 +118,15 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleDeleteSubTask = async (subTaskId: string) => {
-    if (window.confirm("Are you sure you want to delete this subtask?")) {
-      try {
-        await deleteSubTask(subTaskId).unwrap();
-      } catch (err) {
-        console.error("Failed to delete subtask:", err);
-      }
-    }
-  };
+  // const handleDeleteSubTask = async (subTaskId: string) => {
+  //   if (window.confirm("Are you sure you want to delete this subtask?")) {
+  //     try {
+  //       await deleteSubTask(subTaskId).unwrap();
+  //     } catch (err) {
+  //       console.error("Failed to delete subtask:", err);
+  //     }
+  //   }
+  // };
 
   const emptyTask: Task = {
     _id: "new",
@@ -143,9 +144,14 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50">
       <ErrorToast errorMsg={errorMsg || ""} />
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 pt-14 pb-20">
         <div className="flex justify-end mb-4 text-black">
-          <Button onClick={() => setIsCreatingNewTask(true)}>+ Add Task</Button>
+          <Button
+            onClick={() => setIsCreatingNewTask(true)}
+            classN="cursor-pointer hover:text-gray-600"
+          >
+            + Add Task
+          </Button>
         </div>
         {isLoading ? (
           <div className="text-center py-12">
@@ -164,12 +170,12 @@ export default function AdminDashboard() {
                 )}
                 onSave={handleSaveTask}
                 isUpdating={isUpdating}
-                onDelete={() => handleDeleteTask(task._id)}
-                isDeleting={isDeleting}
+                // onDelete={() => handleDeleteTask(task._id)}
+                // isDeleting={isDeleting}
                 onUpdateSubTask={handleUpdateSubTask}
                 isUpdatingSubTask={isUpdatingSubTask}
-                onDeleteSubTask={handleDeleteSubTask}
-                isDeletingSubTask={isDeletingSubTask}
+                // onDeleteSubTask={handleDeleteSubTask}
+                // isDeletingSubTask={isDeletingSubTask}
               />
             ))}
             {isCreatingNewTask && (

@@ -1,32 +1,75 @@
 "use client";
 
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../lib/hooks";
 import { useGetNotificationsQuery } from "../lib/services/apiSlice";
-import { setNotifications, togglePanel } from "../lib/slices/notificationSlice";
+import { closePanel, togglePanel } from "../lib/slices/notificationSlice";
 import NotificationPanel from "./NotificationPanel";
+import type { RootState } from "../lib/store";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import type { Notification } from "../types";
+
+const showToast = (notification: Notification) => {
+  const { title, message, messageType } = notification;
+  const options = { description: message };
+
+  switch (messageType) {
+    case "success":
+      toast.success(title, options);
+      break;
+    case "error":
+      toast.error(title, options);
+      break;
+    case "warning":
+      toast.warning(title, options);
+      break;
+    case "info":
+      toast.info(title, options);
+      break;
+    default:
+      toast.info(title, options);
+      break;
+  }
+};
 
 export default function NotificationBell() {
   const dispatch = useAppDispatch();
   const { showPanel } = useAppSelector((state) => state.notifications);
-  const { data: notifications = [] } = useGetNotificationsQuery({});
+  const user = useAppSelector((state: RootState) => state.auth.user);
 
-  const unreadCount = notifications.filter(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (n: any) => n.status === "unread"
-  ).length;
+  const { data: notifications = [] } = useGetNotificationsQuery(user!._id!, {
+    skip: !user,
+    pollingInterval: 20000,
+  });
+
+  console.log({ notifications });
+
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const prevNotificationsRef = useRef<Notification[]>([]);
 
   useEffect(() => {
-    if (notifications.length > 0) {
-      dispatch(setNotifications(notifications));
+    if (isInitialLoad) {
+      setIsInitialLoad(false);
+    } else {
+      const prevIds = new Set(prevNotificationsRef.current.map((n) => n._id));
+      const newNotifications = notifications.filter((n) => !prevIds.has(n._id));
+
+      newNotifications.forEach((notification) => {
+        if (notification.read === false) {
+          showToast(notification);
+        }
+      });
     }
-  }, [notifications, dispatch]);
+    prevNotificationsRef.current = notifications;
+  }, [notifications, isInitialLoad]);
+
+  const unreadCount = notifications.filter((n) => n.read === false).length;
 
   return (
     <div className="relative">
       <button
         onClick={() => dispatch(togglePanel())}
-        className="relative p-2 text-gray-600 hover:text-gray-800 transition"
+        className="relative p-2 text-gray-300 hover:text-gray-600 cursor-pointer transition"
         aria-label="Notifications"
       >
         <svg
@@ -49,7 +92,12 @@ export default function NotificationBell() {
         )}
       </button>
 
-      {showPanel && <NotificationPanel />}
+      {showPanel && (
+        <NotificationPanel
+          notifications={notifications}
+          onClose={() => dispatch(closePanel())}
+        />
+      )}
     </div>
   );
 }

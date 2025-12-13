@@ -4,7 +4,7 @@ import { useAppSelector } from "../lib/hooks";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole: "admin" | "employee";
+  requiredRole?: "admin" | "employee" | ("admin" | "employee")[];
 }
 
 export default function ProtectedRoute({
@@ -18,14 +18,26 @@ export default function ProtectedRoute({
     return <Navigate to="/login" replace />;
   }
 
-  // Wrong role
-  if (user.role?.name !== requiredRole) {
-    return (
-      <Navigate
-        to={user.role?.name === "admin" ? "/admin" : "/employee"}
-        replace
-      />
-    );
+  // Role check
+  if (requiredRole) {
+    const userRole = user.role?.name;
+    if (!userRole) {
+      // User has no role, but a role is required.
+      return <Navigate to="/login" replace />;
+    }
+
+    const isAuthorized = Array.isArray(requiredRole)
+      ? requiredRole.includes(userRole)
+      : userRole === requiredRole;
+
+    if (!isAuthorized) {
+      return (
+        <Navigate
+          to={userRole === "admin" ? "/admin" : "/employee"}
+          replace
+        />
+      );
+    }
   }
 
   return <>{children}</>;

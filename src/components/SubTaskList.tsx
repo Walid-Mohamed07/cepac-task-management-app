@@ -12,14 +12,14 @@ const statusColors = {
 interface SubTaskCardProps {
   subtasks: SubTask[];
   onUpdate: (subTask: SubTask) => void;
-  onDelete: (subTaskId: string) => void;
+  onDelete?: (subTaskId: string) => void;
 }
 
 export default function SubTaskList({
   subtasks,
   onUpdate,
-  onDelete,
-}: SubTaskCardProps) {
+}: // onDelete,
+SubTaskCardProps) {
   const [editingSubTaskId, setEditingSubTaskId] = useState<string | null>(null);
   const [editableStatus, setEditableStatus] =
     useState<SubTaskStatus>("pending");
@@ -59,7 +59,7 @@ export default function SubTaskList({
       {subtasks.map((subtask: SubTask) => (
         <div
           key={subtask._id}
-          className={`flex flex-col gap-1 p-3 rounded ${
+          className={`flex flex-col gap-2 p-3 rounded ${
             statusColors[subtask.status]
           }`}
         >
@@ -90,8 +90,10 @@ export default function SubTaskList({
             )}
           </div>
           <div className="flex flex-row justify-between">
-            <p className="flex items-center text-xs font-medium text-gray-800">
-              <span className="text-xs text-gray-500 mr-1">Assigned To: </span>
+            <p className="flex items-center text-xs font-medium text-gray-800 w-full">
+              <span className="text-xs text-gray-500 w-18 mr-2">
+                Assigned To:{" "}
+              </span>
               {subtask.userId?.name}
               <img
                 className="ml-2 size-7 rounded-4xl"
@@ -112,7 +114,9 @@ export default function SubTaskList({
             )}
           </div>
           <div className="flex items-center text-xs font-medium text-gray-800">
-            <span className="text-xs text-gray-500 mr-1">Assigned By: </span>
+            <span className="text-xs text-gray-500 w-18 mr-2">
+              Assigned By:{" "}
+            </span>
             {subtask.assignedBy?.name}
             <img
               className="ml-2 size-7 rounded-4xl"
@@ -126,32 +130,40 @@ export default function SubTaskList({
               alt="UserImg"
             />
           </div>
-          <p className="text-xs font-medium text-gray-800">
-            <span className="text-xs text-gray-500">
-              Assignment start time:{" "}
-            </span>
-            {formatDate(subtask.createdAt)}
-          </p>
-          <p className="text-xs font-medium text-gray-800">
-            <span className="text-xs text-gray-500">Dead Time: </span>
-            {editingSubTaskId === subtask._id ? (
-              <input
-                type="datetime-local"
-                value={editableDeadTime}
-                onChange={(e) => setEditableDeadTime(e.target.value)}
-                className="px-1 py-0.5 rounded text-xs font-medium bg-gray-100 border border-gray-300 text-black"
-              />
-            ) : subtask.deadTime ? (
-              formatDate(subtask.deadTime)
-            ) : (
-              "N/A"
-            )}
-          </p>
+          <div className="">
+            <p className="flex items-center text-xs font-medium text-gray-800 w-full">
+              <span className="text-xs text-gray-500 w-18 mr-2">
+                Assignment start time:
+              </span>
+              {formatDate(subtask.createdAt)}
+            </p>
+          </div>
+          <div>
+            <p className="flex items-center text-xs font-medium text-gray-800 w-full">
+              <span className="text-xs text-gray-500 w-18 mr-2">
+                Dead Time:{" "}
+              </span>
+              {editingSubTaskId === subtask._id ? (
+                <input
+                  type="datetime-local"
+                  value={editableDeadTime}
+                  onChange={(e) => setEditableDeadTime(e.target.value)}
+                  className="px-1 py-0.5 rounded text-xs font-medium bg-gray-100 border border-gray-300 text-black"
+                />
+              ) : subtask.deadTime ? (
+                formatDate(subtask.deadTime)
+              ) : (
+                "N/A"
+              )}
+            </p>
+          </div>
           {editingSubTaskId === subtask._id ? (
             <div className="mt-2 flex flex-col gap-2">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-500">Status: </span>
+                  <span className="text-xs text-gray-500 w-18 mr-2">
+                    Status:{" "}
+                  </span>
                   <select
                     value={editableStatus}
                     onChange={(e) =>
@@ -183,8 +195,8 @@ export default function SubTaskList({
             </div>
           ) : (
             <div className="flex justify-between items-center mt-2">
-              <span className="text-xs font-medium text-gray-600">
-                <span className="text-xs text-gray-500">Status: </span>
+              <span className="flex items-center text-xs font-medium text-gray-800 w-full">
+                <span className="text-xs text-gray-500 w-18 mr-2">Status:</span>
                 {subtask.status}
               </span>
               <div className="flex gap-2">
@@ -194,12 +206,12 @@ export default function SubTaskList({
                 >
                   Edit
                 </Button>
-                <Button
+                {/* <Button
                   classN="py-0.5 px-4 rounded-xs bg-red-600 hover:bg-red-500 text-white font-medium cursor-pointer transition-all duration-200 disabled:bg-gray-300"
                   onClick={() => onDelete(subtask._id)}
                 >
                   Delete
-                </Button>
+                </Button> */}
               </div>
             </div>
           )}

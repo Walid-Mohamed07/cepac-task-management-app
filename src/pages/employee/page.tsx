@@ -1,23 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../lib/hooks";
-import { logout } from "../../lib/slices/authSlice";
+import { useAppSelector } from "../../lib/hooks";
 import { useGetAssignedTasksQuery } from "../../lib/services/apiSlice";
-import NotificationBell from "../../components/NotificationBell";
-import TaskCard from "../../components/TaskCard";
 import type { Task } from "../../types";
+import TaskCardEmployee from "../../components/TaskCardEmployee";
 
 export default function EmployeeDashboard() {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { data: tasks = [], isLoading } = useGetAssignedTasksQuery(
     user?._id || ""
   );
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -30,20 +20,11 @@ export default function EmployeeDashboard() {
               Your assigned tasks, {user?.name}
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <NotificationBell />
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-            >
-              Logout
-            </button>
-          </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 pt-14 pb-20">
         {isLoading ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Loading your tasks...</p>
@@ -51,7 +32,7 @@ export default function EmployeeDashboard() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {tasks.map((task: Task) => (
-              <TaskCard key={task._id} task={task} />
+              <TaskCardEmployee key={task._id} task={task} />
             ))}
           </div>
         )}

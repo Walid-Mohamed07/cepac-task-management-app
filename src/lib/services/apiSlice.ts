@@ -13,7 +13,10 @@ import type {
   UpdateTaskPayload,
   CreateSubTaskPayload,
   UpdateSubTaskPayload,
+  Notification,
+  CreateNotificationPayload,
 } from "../../types";
+import type { CONVERSATION, MESSAGE } from "../../types/messenger";
 import { handleError } from "../../utils/errorHandling";
 
 const baseUrl = import.meta.env.VITE_API_URL!;
@@ -47,7 +50,7 @@ const baseQueryWithReauth: BaseQueryFn<
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["Task"],
+  tagTypes: ["Task", "Notification", "Conversation", "Message"],
   endpoints: (builder) => ({
     // Auth endpoints
     login: builder.mutation<
@@ -55,7 +58,7 @@ export const apiSlice = createApi({
         token: string;
         user: {
           _id: string;
-          ame: string;
+          name: string;
           email: string;
           profilePicture: string;
           role: {
@@ -178,24 +181,122 @@ export const apiSlice = createApi({
         handleError(response, "Failed to delete subtask"),
       invalidatesTags: ["Task"],
     }),
+
     // Notification endpoints
-    getNotifications: builder.query({
-      query: () => "/notifications",
-      // pollingInterval: 30000, // Poll every 30 seconds
+    getNotifications: builder.query<Notification[], string>({
+      query: (userId) => `/notifications/user/${userId}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Notification" as const,
+                id: _id,
+              })),
+              { type: "Notification", id: "LIST" },
+            ]
+          : [{ type: "Notification", id: "LIST" }],
     }),
 
-    markNotificationAsRead: builder.mutation({
-      query: (id: string) => ({
-        url: `/notifications/${id}/read`,
-        method: "PUT",
+    createNotification: builder.mutation<
+      Notification,
+      CreateNotificationPayload
+    >({
+      query: (body) => ({
+        url: "/notifications",
+        method: "POST",
+        body,
       }),
+      invalidatesTags: [{ type: "Notification", id: "LIST" }],
     }),
 
-    deleteNotification: builder.mutation({
-      query: (id: string) => ({
+    markNotificationAsRead: builder.mutation<Notification, string>({
+      query: (id) => ({
+        url: `/notifications/${id}/read`,
+        method: "PATCH",
+      }),
+      invalidatesTags: (result, error, id) =>
+        error ? [] : [{ type: "Notification", id }],
+    }),
+
+    deleteNotification: builder.mutation<void, string>({
+      query: (id) => ({
         url: `/notifications/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: (result, error, id) =>
+        error ? [] : [{ type: "Notification", id }],
+    }),
+
+    // Messenger endpoints
+    createConversation: builder.mutation<
+      CONVERSATION,
+      { participants: string[] }
+    >({
+      query: (body) => ({
+        url: "/chat/conversations",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [{ type: "Conversation", id: "LIST" }],
+    }),
+    getConversationsByUser: builder.query<CONVERSATION[], string>({
+      query: (userId) => `/chat/conversations/user/${userId}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Conversation" as const,
+                id: _id,
+              })),
+              { type: "Conversation", id: "LIST" },
+            ]
+          : [{ type: "Conversation", id: "LIST" }],
+    }),
+    getConversationById: builder.query<CONVERSATION, string>({
+      query: (id) => `/chat/conversations/${id}`,
+      providesTags: (result, error, id) =>
+        error ? [] : [{ type: "Conversation", id }],
+    }),
+    markConversationAsRead: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `/chat/conversations/${id}/mark-read`,
+        method: "PATCH",
+      }),
+      invalidatesTags: (result, error, id) =>
+        error ? [] : [{ type: "Conversation", id }],
+    }),
+    getUnreadCount: builder.query<number, string>({
+      query: (id) => `/chat/conversations/${id}/unread-count`,
+    }),
+    createMessage: builder.mutation<
+      MESSAGE,
+      { conversationId: string; content: string }
+    >({
+      query: (body) => ({
+        url: "/chat/messages",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: (result, error, arg) =>
+        error
+          ? []
+          : [
+              { type: "Message", id: "LIST" },
+              { type: "Conversation", id: arg.conversationId },
+            ],
+    }),
+    getMessages: builder.query<MESSAGE[], string>({
+      query: (conversationId) => `/chat/messages/${conversationId}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Message" as const,
+                id: _id,
+              })),
+              { type: "Message", id: "LIST" },
+            ]
+          : [{ type: "Message", id: "LIST" }],
     }),
   }),
 });
@@ -214,6 +315,14 @@ export const {
   useCreateSubTaskMutation,
   useUpdateSubTaskMutation,
   useDeleteSubTaskMutation,
+  useCreateNotificationMutation,
   useMarkNotificationAsReadMutation,
   useDeleteNotificationMutation,
+  useCreateConversationMutation,
+  useGetConversationsByUserQuery,
+  useGetConversationByIdQuery,
+  useMarkConversationAsReadMutation,
+  useGetUnreadCountQuery,
+  useCreateMessageMutation,
+  useGetMessagesQuery,
 } = apiSlice;
