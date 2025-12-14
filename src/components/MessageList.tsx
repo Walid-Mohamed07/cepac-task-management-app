@@ -22,7 +22,7 @@ const MessageList: React.FC<MessageListProps> = ({
   }, [messages]);
 
   return (
-    <div className="message-list-container">
+    <div className="flex flex-col gap-4 overflow-y-auto p-4 flex-grow">
       {messages.map((message) => (
         <MessageItem
           key={message._id}

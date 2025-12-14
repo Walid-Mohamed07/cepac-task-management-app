@@ -10,7 +10,6 @@ import {
   useCreateMessageMutation,
   useGetAllUsersQuery,
 } from "../../lib/services/apiSlice";
-import "./Messenger.css";
 import { skipToken } from "@reduxjs/toolkit/query";
 import Loader from "../../components/shared/Loader";
 
@@ -67,12 +66,12 @@ const MessengerPage: React.FC = () => {
   }
 
   if (conversationsError) {
-    return <div className="error-message">Error loading conversations.</div>;
+    return <div className="mt-5 text-center text-red-500">Error loading conversations.</div>;
   }
 
   return (
-    <div className="messenger">
-      <div className="conversation-list">
+    <div className="flex h-[calc(100vh-60px)]">
+      <div className="w-[30%] overflow-y-auto border-r border-gray-300 p-4">
         <ConversationList
           conversations={conversations || []}
           onConversationSelect={handleConversationSelect}
@@ -81,12 +80,12 @@ const MessengerPage: React.FC = () => {
           currentUser={currentUser}
         />
       </div>
-      <div className="chat-area">
+      <div className="flex w-[70%] flex-col">
         {selectedConversationId ? (
           <>
             {messagesLoading && <Loader />}
             {messagesError && (
-              <div className="error-message">Error loading messages.</div>
+              <div className="mt-5 text-center text-red-500">Error loading messages.</div>
             )}
             {messages && currentUser && (
               <MessageList
@@ -98,7 +97,7 @@ const MessengerPage: React.FC = () => {
             <MessageInput onSendMessage={handleSendMessage} />
           </>
         ) : (
-          <div className="no-conversation-selected">
+          <div className="flex h-full items-center justify-center text-gray-500">
             <h2>Select a conversation to start chatting</h2>
           </div>
         )}

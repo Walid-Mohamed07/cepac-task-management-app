@@ -19,7 +19,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
   currentUser,
 }) => {
   return (
-    <div className="conversation-list-container">
+    <div className="">
       {conversations.map((conversation) => (
         <ConversationListItem
           key={conversation._id}

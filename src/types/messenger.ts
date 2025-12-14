@@ -19,6 +19,13 @@ export interface MESSAGE {
   edited: boolean;
   deleted: boolean;
   readBy: User[];
+  reactions?: REACTION[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface REACTION {
+  _id: string;
+  emoji: string;
+  userId: User;
 }

@@ -43,13 +43,19 @@ const ConversationListItem: React.FC<ConversationListItemProps> = ({
 
   return (
     <div
-      className={`conversation-list-item ${isSelected ? "selected" : ""}`}
+      className={`mb-2 flex cursor-pointer items-center rounded-lg p-2 ${
+        isSelected ? "bg-gray-200" : ""
+      } hover:bg-gray-100`}
       onClick={onSelect}
     >
-      <img src={avatar} alt={name} className="avatar" />
-      <div className="conversation-info">
-        <p className="conversation-name">{name}</p>
-        <p className="conversation-latest-message">
+      <img
+        src={`${import.meta.env.VITE_STORAGE_PATH}${avatar}`}
+        alt={name}
+        className="mr-2 h-10 w-10 rounded-full object-cover"
+      />
+      <div className="">
+        <p className="font-bold">{name}</p>
+        <p className="overflow-hidden text-ellipsis whitespace-nowrap text-sm text-gray-500">
           {conversation.latestMessage?.content}
         </p>
       </div>

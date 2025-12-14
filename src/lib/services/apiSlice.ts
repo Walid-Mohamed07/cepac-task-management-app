@@ -298,6 +298,16 @@ export const apiSlice = createApi({
             ]
           : [{ type: "Message", id: "LIST" }],
     }),
+    reactToMessage: builder.mutation<void, { id: string; emoji: string; action: "add" | "remove" }>(
+      {
+        query: ({ id, emoji, action }) => ({
+          url: `/chat/messages/${id}/react`,
+          method: "PATCH",
+          body: { emoji, action },
+        }),
+        invalidatesTags: (result, error, arg) => (error ? [] : [{ type: "Message", id: arg.id }]),
+      }
+    ),
   }),
 });
 
@@ -325,4 +335,5 @@ export const {
   useGetUnreadCountQuery,
   useCreateMessageMutation,
   useGetMessagesQuery,
+  useReactToMessageMutation,
 } = apiSlice;
